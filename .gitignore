@@ -1,5 +1,26 @@
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Environment variables
 .env
-.venv/*
-.logs/*
+
+# Logs
+logs/
+*.log
+
+# Python cache
+__pycache__/
 *.pyc
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Optional: IDE
+.vscode/
+.idea/
+
+# Your file (if you want to exclude it)
 dashboard_app_demo.py

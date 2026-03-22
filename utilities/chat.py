@@ -5,7 +5,7 @@ async def format_agent_response(agent, messages, langfuse_handler):
     response_text = ""
     async for chunk in agent.astream(
         {"messages": messages}, 
-        config={"configurable": {"thread_id": "main_session"}, "callbacks": [langfuse_handler]}, 
+        config={"configurable": {"thread_id": "new_session_id"}, "callbacks": [langfuse_handler]}, 
         stream_mode="values"
     ):
         if 'messages' in chunk and chunk['messages']:

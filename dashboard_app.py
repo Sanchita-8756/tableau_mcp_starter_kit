@@ -123,8 +123,20 @@ async def lifespan(app: FastAPI):
 
                 # Create the agent
                 checkpointer = InMemorySaver()
-                agent = create_react_agent(model=llm, tools=mcp_tools, prompt=AGENT_SYSTEM_PROMPT, checkpointer=checkpointer)
-                
+                # agent = create_react_agent(model=llm, tools=mcp_tools, prompt=AGENT_SYSTEM_PROMPT, checkpointer=checkpointer)
+                def wrap_tool_with_error_handling(tool):
+                    """Adds error handling to a tool so it returns the error instead of crashing"""
+                    original_func = tool.func if hasattr(tool, 'func') else None
+                    
+                    def handle_error(e):
+                        return f"Tool execution failed: {str(e)}"
+
+                    tool.handle_tool_error = True # Some versions use this attribute
+                    return tool
+
+                # Then wrap your tools before creating the agent:
+                safe_tools = [wrap_tool_with_error_handling(t) for t in mcp_tools]
+                agent = create_react_agent(model=llm, tools=safe_tools, prompt=AGENT_SYSTEM_PROMPT, checkpointer=checkpointer)
                 yield
         
     # Error Handling
